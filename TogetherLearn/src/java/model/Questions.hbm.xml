@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 16, 2017 4:30:44 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Questions" table="questions" catalog="forum" optimistic-lock="version">
+        <id name="questionId" type="long">
+            <column name="question_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="users" class="model.Users" fetch="select">
+            <column name="user_id" />
+        </many-to-one>
+        <property name="title" type="string">
+            <column name="title" length="50" />
+        </property>
+        <property name="message" type="string">
+            <column name="message" length="200" />
+        </property>
+        <property name="time" type="timestamp">
+            <column name="_time" length="19" not-null="true" />
+        </property>
+        <property name="tag" type="string">
+            <column name="tag" length="30" />
+        </property>
+        <set name="answerses" table="answers" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="question_id" />
+            </key>
+            <one-to-many class="model.Answers" />
+        </set>
+        <set name="voteQuestions" table="vote_question" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="question_id" not-null="true" />
+            </key>
+            <one-to-many class="model.VoteQuestion" />
+        </set>
+    </class>
+</hibernate-mapping>
