@@ -1,9 +1,3 @@
-<%-- 
-    Document   : newQuestion
-    Created on : Feb 21, 2017, 9:24:27 PM
-    Author     : Christian
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
