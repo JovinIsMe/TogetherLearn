@@ -8,7 +8,6 @@
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
-    <property name="hibernate.connection.password">root</property>
     <mapping resource="model/Questions.hbm.xml"/>
     <mapping resource="model/Answers.hbm.xml"/>
     <mapping resource="model/VoteAnswer.hbm.xml"/>
