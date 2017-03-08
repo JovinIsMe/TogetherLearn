@@ -10,21 +10,8 @@
         </div>
         <div class="navigation-menu">
             <ul class="User">
-                <!-- Getting From DB -->
-                <li id="courses">
-                    <a href="#">COURSES</a>
-                </li>
-                <li id="codes">
-                    <a href="#">CODE PLAYGROUND</a>
-                </li>
                 <li id="discuss">
                     <a href="discuss.jsp" value="discuss">DISCUSS</a>
-                </li>
-                <li id="leaders">
-                    <a href="#">TOP LEARNERS</a>
-                </li>
-                <li id="blogPage">
-                    <a href="#">BLOG</a>
                 </li>
                 <%
                     if (session.getAttribute("email") == null || session.getAttribute("email").equals("")) {
