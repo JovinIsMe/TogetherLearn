@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="col-lg-2">
                     <div class="input-group">
-                        <a href="newQuestion.jsp?email=<%= email%>"
+                        <a href="newQuestion.jsp?email=<%=email%>"
                            <button type="submit" class="btn btn-info">NEW QUESTION</button>
                         </a>
                     </div>
