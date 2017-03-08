@@ -1,9 +1,5 @@
-<%-- 
-    Document   : profile
-    Created on : Feb 24, 2017, 12:03:41 AM
-    Author     : Jovin Angelico
---%>
-
+<%@page import="util.DataAkses"%>
+<%@page import="model.Users"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,17 +10,25 @@
     </head>
     <body>
         <jsp:include page="header.jsp" flush="true"/>
+        <%
+            if (session.getAttribute("email")==null || session.getAttribute("email").equals("")) {
+                RequestDispatcher rd = request.getRequestDispatcher("index.html");
+                rd.include(request, response);
+            } else {
+                Users user = new Users();
+                user = new DataAkses().getUser((String) session.getAttribute("email"));
+        %>
         <div class="block">
-            <div class="userProfile   current">
+            <div class="userProfile  current">
             <div class="user">        
                 <div class="avatar">
-                        <img src="https://api.togetherlearn.com/Uploads/Avatars/3494319.jpg" alt="Jovin Angelico" />
+                    <img src="<%=user.getAvatar()%>" alt="<%=user.getName()%>" />
                 </div>
                 <div class="details">
                     <h1 class="name ">
-                        <%=session.getAttribute("email")%>
+                        <%=user.getEmail()%>
                     </h1>
-                    <div class="detail">
+                    <%--<div class="detail">
                         <div>
                             <label>Level</label>
                             8
@@ -32,9 +36,9 @@
                             <div>
                                 <span>3273 XP</span>
                             </div>
-                    </div>            
+                    </div>--%>            
                         <a class="materialButton elevated" href="logout.jsp">Sign out</a>
-                        <a class="materialButton primary elevated" href="/User/Edit">Edit Profile</a>
+                        <a class="materialButton primary elevated" href="editProfile.jsp">Edit Profile</a>
                 </div>
                 <div class="socialOutline">
 
@@ -56,6 +60,7 @@
             </div>
         </div>
         <hr/>
+        <%}%>
         <jsp:include page="footer.jsp" flush="true"/>
     </body>
 </html>

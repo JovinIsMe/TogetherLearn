@@ -103,4 +103,16 @@ public class DataAkses {
         session.close();
         return res;
     }
+    
+    public int updateProfile(Users u) {
+        Session session = factory.openSession();
+        Query query = session.createQuery("update Users u set u.name = :uname, u.email = :uemail, u.password = :upass, u.avatar = :uava" +" where u.userId = :uid");
+        query.setParameter("uname", u.getName());
+        query.setParameter("uemail", u.getEmail());
+        query.setParameter("upass", u.getPassword());
+        query.setParameter("uava", u.getAvatar());
+        query.setParameter("uid", u.getUserId());
+        int result = query.executeUpdate();
+        return result;
+    }
 }

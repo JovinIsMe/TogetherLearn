@@ -17,33 +17,33 @@
             <div class="form-group">
                 <label for="fullName" class="col-sm-4 control-label">Full Name</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Name" required>
+                    <input pattern=".{3,100}" type="text" class="form-control" id="fullName" name="fullName" placeholder="Name" required>
                 </div>
             </div>
             
             <div class="form-group">
                 <label for="email" class="col-sm-4 control-label">Email address</label>
                 <div class="col-sm-4">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                    <input pattern=".{3,100}" type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                 </div>
             </div>
             
             <div class="form-group">
                 <label for="retypeEmail"  class="col-sm-4 control-label">Re-type email</label>
                 <div class="col-sm-4">
-                    <input type="email" class="form-control" id="retypeEmail" name="retypeEmail" placeholder="Confirm Email" required>
+                    <input pattern=".{3,100}" type="email" class="form-control" id="retypeEmail" name="retypeEmail" placeholder="Confirm Email" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="password" class="col-sm-4 control-label">Password</label>
                 <div class="col-sm-4">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <input pattern=".{6,15}" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="retypePassword" class="col-sm-4 control-label">Re-type password</label>
                 <div class="col-sm-4">
-                    <input type="password" class="form-control" id="retypePassword" name="retypePassword" placeholder="Confirm Password" required>
+                    <input pattern=".{6,15}" type="password" class="form-control" id="retypePassword" name="retypePassword" placeholder="Confirm Password" required>
                 </div>
             </div>
             <div class="form-group">
@@ -60,9 +60,6 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </div>
             </div>
-            
-            
-
         </form>
             
         </div>
@@ -71,7 +68,7 @@
             if (status != null) {
                 if (status.equals("0")) {
         %>
-    <center><p style='color:red'>Register failed, please check your data !</p></center>
+        <center><p style='color:red'>Register failed, please check your data !</p></center>
         <%
                 }
             }
