@@ -63,6 +63,7 @@
                     out.println("<h4 style='margin-left:2%'>Title   : " + q.getTitle() + "</h5>");
                     out.println("<h4 style='margin-left:2%'>Message : " + q.getMessage() + "</h5>");
                     out.println("<button type='submit' class='btn btn-info' style='margin-left:4%'>" + q.getTag() + "</button>");
+                    
                     out.println("<hr></div>");
                 }
             %>

@@ -64,6 +64,18 @@ public class DataAkses {
         return hasil;
     }
     
+    public Questions getQuestions(long questionId){
+        Session session = factory.openSession();
+        Questions t = null;
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from Questions u where u.question_id = :em");
+        q.setParameter("em",questionId);
+        t = (Questions) q.uniqueResult();
+        tx.commit();
+        session.close();
+        return t;
+    }
+    
     public Users getUser(String email){
         Session session = factory.openSession();
         Users u = null;
