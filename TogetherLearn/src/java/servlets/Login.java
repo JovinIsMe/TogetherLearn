@@ -36,12 +36,14 @@ public class Login extends HttpServlet {
 
         Users u = new Users();
         u = da.login(email, password);
-
+        
         if (u == null || u.getName().isEmpty()) {
             System.out.println("Sorry, you are not registered!");
             RequestDispatcher rd = request.getRequestDispatcher("login.jsp?status=0");
             rd.include(request, response);
         } else {
+            String userId = u.getUserId()+"";
+            session.setAttribute("userId", userId);
             session.setAttribute("email", email);
             RequestDispatcher rd = request.getRequestDispatcher("discuss.jsp");
             rd.include(request, response);

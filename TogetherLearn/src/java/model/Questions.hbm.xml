@@ -8,7 +8,7 @@
             <column name="question_id" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="users" class="model.Users" fetch="select">
+        <many-to-one name="users" class="model.Users" lazy="false" fetch="select">
             <column name="user_id" />
         </many-to-one>
         <property name="title" type="string">
@@ -23,13 +23,13 @@
         <property name="tag" type="string">
             <column name="tag" length="30" />
         </property>
-        <set name="answerses" table="answers" inverse="true" lazy="true" fetch="select">
+        <set name="answerses" table="answers" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="question_id" />
             </key>
             <one-to-many class="model.Answers" />
         </set>
-        <set name="voteQuestions" table="vote_question" inverse="true" lazy="true" fetch="select">
+        <set name="voteQuestions" table="vote_question" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="question_id" not-null="true" />
             </key>

@@ -24,7 +24,7 @@ public class InsertQuestions extends HttpServlet {
         
         Users u = new Users();
         u = da.getUser((String) session.getAttribute("email"));
-        String email = u.getEmail();
+        //String email = u.getEmail();
         String title = request.getParameter("title");
         String message = request.getParameter("message");
         String tag = request.getParameter("tag");
@@ -39,8 +39,9 @@ public class InsertQuestions extends HttpServlet {
         baru.setQuestionId((long) new Date().getTime());
         
         if(da.newQuestion(baru)){
-            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-            rd.include(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+//            rd.include(request, response);
+            response.sendRedirect("discuss.jsp");
         }else{
             PrintWriter out = response.getWriter();
             out.println("<html><body><center><h2 style=\"color:red;\">Register Failed, please check your data!</h3></center></body></html>");

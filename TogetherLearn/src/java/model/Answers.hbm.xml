@@ -8,10 +8,10 @@
             <column name="answer_id" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="questions" class="model.Questions" fetch="select">
+        <many-to-one name="questions" class="model.Questions" lazy="false" fetch="select">
             <column name="question_id" />
         </many-to-one>
-        <many-to-one name="users" class="model.Users" fetch="select">
+        <many-to-one name="users" class="model.Users" lazy="false" fetch="select">
             <column name="user_id" />
         </many-to-one>
         <property name="content" type="string">
@@ -20,7 +20,7 @@
         <property name="time" type="timestamp">
             <column name="_time" length="19" not-null="true" />
         </property>
-        <set name="voteAnswers" table="vote_answer" inverse="true" lazy="true" fetch="select">
+        <set name="voteAnswers" table="vote_answer" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="answer_id" not-null="true" />
             </key>

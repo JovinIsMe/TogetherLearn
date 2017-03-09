@@ -1,6 +1,7 @@
 package util;
 
 import java.util.ArrayList;
+import model.Answers;
 import model.Questions;
 import model.Users;
 import org.hibernate.Query;
@@ -52,12 +53,24 @@ public class DataAkses {
         session.close();
         return res;
     }
+    
+    public ArrayList<Questions> getSearched(String search){
+        Session session = factory.openSession();
+        ArrayList<Questions> hasil = null;
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from Questions q where q.title like :keyword or q.tag like :keyword");
+        q.setParameter("keyword", "%" + search + "%");
+        hasil = (ArrayList<Questions>) q.list();
+        tx.commit();
+        session.close();
+        return hasil;
+    }
 
     public ArrayList<Questions> getAllQuestions() {
         Session session = factory.openSession();
         ArrayList<Questions> hasil = null;
         Transaction tx = session.beginTransaction();
-        Query q = session.createQuery("from Questions");
+        Query q = session.createQuery("from Questions order by _time desc");
         hasil = (ArrayList<Questions>) q.list();
         tx.commit();
         session.close();
@@ -68,20 +81,60 @@ public class DataAkses {
         Session session = factory.openSession();
         Questions t = null;
         Transaction tx = session.beginTransaction();
-        Query q = session.createQuery("from Questions u where u.question_id = :em");
+
+        System.out.println("QUESTION ID : "+questionId);
+        Query q = session.createQuery("from Questions where question_id = :em");
         q.setParameter("em",questionId);
         t = (Questions) q.uniqueResult();
         tx.commit();
+        System.out.println("QUESTION ID : "+questionId);
         session.close();
         return t;
     }
     
+    public ArrayList<Answers> getAnswers() {
+        Session session = factory.openSession();
+        ArrayList<Answers> hasil = null;
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from Answers a");
+        //q.setParameter("q_id", que);
+        hasil = (ArrayList<Answers>) q.list();
+        tx.commit();
+        session.close();
+        return hasil;
+    }
+    
+    public ArrayList<Answers> getAnswers(Long q_id) {
+        Session session = factory.openSession();
+        ArrayList<Answers> hasil = null;
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from Answers where question_id = :que");
+        //q.setLong(0, q_id);
+        q.setParameter("que", q_id);
+        hasil = (ArrayList<Answers>) q.list();
+        tx.commit();
+        session.close();
+        return hasil;
+    }
     public Users getUser(String email){
         Session session = factory.openSession();
         Users u = null;
         Transaction tx = session.beginTransaction();
         Query q = session.createQuery("from Users u where u.email = :em");
         q.setParameter("em", email);
+        u = (Users) q.uniqueResult();
+        tx.commit();
+        session.close();
+        
+        return u;
+    }
+    
+    public Users getUser(Long uid){
+        Session session = factory.openSession();
+        Users u = null;
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from Users u where u.userId = :uid");
+        q.setParameter("uid", uid);
         u = (Users) q.uniqueResult();
         tx.commit();
         session.close();
@@ -104,15 +157,32 @@ public class DataAkses {
         return res;
     }
     
-    public int updateProfile(Users u) {
+    public boolean newAnswer(Answers a){
+        boolean res = true;
         Session session = factory.openSession();
-        Query query = session.createQuery("update Users u set u.name = :uname, u.email = :uemail, u.password = :upass, u.avatar = :uava" +" where u.userId = :uid");
-        query.setParameter("uname", u.getName());
-        query.setParameter("uemail", u.getEmail());
-        query.setParameter("upass", u.getPassword());
-        query.setParameter("uava", u.getAvatar());
-        query.setParameter("uid", u.getUserId());
-        int result = query.executeUpdate();
-        return result;
+        Transaction tx = session.beginTransaction();
+        try {
+            session.save(a);
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            res = false;
+        }
+        session.close();
+        return res;
+    }
+    
+    public boolean updateProfile(Users u) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Users user = (Users) session.get(Users.class, u.getUserId());
+        System.out.println("UPDATE = "+user);
+        user.setName(u.getName());
+        user.setEmail(u.getEmail());
+        user.setPassword(u.getPassword());
+        user.setAvatar(u.getAvatar());
+        tx.commit();
+        session.close();
+        return true;
     }
 }

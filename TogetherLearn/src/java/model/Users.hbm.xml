@@ -20,25 +20,25 @@
         <property name="avatar" type="string">
             <column name="avatar" length="200" />
         </property>
-        <set name="voteAnswers" table="vote_answer" inverse="true" lazy="true" fetch="select">
+        <set name="voteAnswers" table="vote_answer" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" not-null="true" />
             </key>
             <one-to-many class="model.VoteAnswer" />
         </set>
-        <set name="answerses" table="answers" inverse="true" lazy="true" fetch="select">
+        <set name="answerses" table="answers" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" />
             </key>
             <one-to-many class="model.Answers" />
         </set>
-        <set name="questionses" table="questions" inverse="true" lazy="true" fetch="select">
+        <set name="questionses" table="questions" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" />
             </key>
             <one-to-many class="model.Questions" />
         </set>
-        <set name="voteQuestions" table="vote_question" inverse="true" lazy="true" fetch="select">
+        <set name="voteQuestions" table="vote_question" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="user_id" not-null="true" />
             </key>
