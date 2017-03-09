@@ -60,10 +60,15 @@
 
                 for (Questions q : da.getAllQuestions()) {
                     out.println("<div style='background-color:#f5f5f5'><hr>");
-                    out.println("<h4 style='margin-left:2%'>Title   : " + q.getTitle() + "</h5>");
+                    out.println("<a href='question.jsp?email="+email+"&questionId='"+q.getQuestionId()+"");
+                        out.println("<h4 style='margin-left:2%'>Title   : " + q.getTitle() + "</h5>");
                     out.println("<h4 style='margin-left:2%'>Message : " + q.getMessage() + "</h5>");
                     out.println("<button type='submit' class='btn btn-info' style='margin-left:4%'>" + q.getTag() + "</button>");
-                    
+            %>
+            <a href=""
+               <button type="submit" class="btn btn-info">+1</button>
+            </a>
+            <%
                     out.println("<hr></div>");
                 }
             %>

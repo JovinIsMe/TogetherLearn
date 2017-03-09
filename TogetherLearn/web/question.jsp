@@ -11,6 +11,11 @@
         <jsp:include page="head.jsp" flush="true">
             <jsp:param name="laman" value="Question"/>
         </jsp:include>
+        
+        <%
+            String email = request.getParameter("email");
+            long questionId = Long.parseLong(request.getParameter("questionId"));
+        %>
     </head>
     <body>
         <jsp:include page="header.jsp" flush="true"/>
