@@ -4,20 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/model/VoteQuestion.java</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/question.jsp</file>
             <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/discuss.jsp</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/servlets/Login.java</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/model/VoteAnswer.hbm.xml</file>
             <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/hibernate.cfg.xml</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/model/Questions.java</file>
             <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/util/DataAkses.java</file>
+            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/viewQuestion.jsp</file>
             <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/model/VoteQuestionId.java</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/controller/FileController.java</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/header.jsp</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/profile.jsp</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/hibernate.reveng.xml</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/voteAnswer.jsp</file>
-            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/web/voteQuestion.jsp</file>
+            <file>file:/C:/Users/Christian/Documents/GitHub/TogetherLearn/TogetherLearn/src/java/model/VoteQuestion.hbm.xml</file>
         </group>
     </open-files>
 </project-private>

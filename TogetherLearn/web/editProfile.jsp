@@ -10,8 +10,12 @@
     <body>
         <jsp:include page="header.jsp" flush="true"/>
         <%
-            Users user = new Users();
-            user = new DataAkses().getUser((String) session.getAttribute("email"));
+            if(session.getAttribute("userId") == null || session.getAttribute("userId").equals("")){
+                RequestDispatcher rd = request.getRequestDispatcher("index.html");
+                rd.include(request, response);
+            } else {
+                Users user = new Users();
+                user = new DataAkses().getUser(Long.parseLong((String) session.getAttribute("userId")));
         %>
         <div class="loginOutline block">
             <h1 class="loginTitle">
@@ -24,7 +28,7 @@
                 <div class="primary">
                     <div class="setAvatar">
                         Set Avatar
-                        <input type="file" class="chooseFile" value="Choose">
+                        <input type="file" name="avatar" class="chooseFile" value="Choose">
                     </div>
                     <div class="removeAvatar">Remove</div>
                 </div>
@@ -88,6 +92,7 @@
                 </form>
             </section>
         </div>
+        <%}%>
         <jsp:include page="footer.jsp" flush="true"/>
     </body>
 </html>

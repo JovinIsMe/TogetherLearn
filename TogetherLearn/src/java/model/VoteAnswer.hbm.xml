@@ -12,12 +12,12 @@
                 <column name="answer_id" />
             </key-property>
         </composite-id>
-<!--        <many-to-one name="answers" class="model.Answers" update="false" insert="false" fetch="select">
+        <many-to-one name="answers" class="model.Answers" update="false" insert="false" fetch="select">
             <column name="answer_id" not-null="true" />
         </many-to-one>
         <many-to-one name="users" class="model.Users" update="false" insert="false" fetch="select">
             <column name="user_id" not-null="true" />
-        </many-to-one>-->
+        </many-to-one>
         <property name="vote" type="long">
             <column name="vote" not-null="true" />
         </property>

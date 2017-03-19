@@ -1,9 +1,4 @@
-<%-- 
-    Document   : viewQuestion
-    Created on : Mar 9, 2017, 12:49:31 AM
-    Author     : Filipus
---%>
-
+<%@page import="java.util.ArrayList"%>
 <%@page import="model.Answers"%>
 <%@page import="model.Users"%>
 <%@page import="util.DataAkses"%>
@@ -35,32 +30,49 @@
                     RequestDispatcher rd = request.getRequestDispatcher("index.html");
                     rd.include(request, response);
                 } else {
-
-                    String que_id = request.getParameter("question_id");
-                    System.out.println("QUESTION ID : " + que_id);
+                    Long userId = Long.parseLong(session.getAttribute("userId") + "");
+                    Long que_id = Long.parseLong((String) request.getParameter("question_id"));
                     DataAkses da = new DataAkses();
-                    Questions q = da.getQuestions(Long.parseLong((String) que_id));
+                    Questions q = da.getQuestion(que_id);
 
                     out.println("<h2>" + q.getTitle() + "</h2>");
                     out.println("<h3>" + q.getMessage() + "</h2>");
-                    String tags[] = q.getTag().split(", ");
-                    for (int idx = 0; idx < tags.length; idx++) {
-                        out.println("<button type='submit' class='btn btn-primary'>" + tags[idx] + "</button>");
+                    out.println("<h3><button type='submit' class='btn btn-primary'>" + q.getTag() + "</button></h3>");
+
+                    String vote = request.getParameter("vote") + "";
+                    System.out.println("VOTE " + vote);
+                    if (vote.equals("up") || vote.equals("down")) {
+                        if (da.cekQuestionVote(que_id, userId)) {
+                                da.voteQuestion(que_id, userId, vote);
+                            }else{
+                                da.NewvoteQuestion(que_id, userId, vote);
+                        }
                     }
-
-                    out.println("<hr><h4>Asked by : " + q.getUsers().getName()+"</h4>");
-                    out.println("<h4>Posted on : "+q.getTime()+"</h4>");
-
+                    out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(que_id) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
             %>
-            <hr>
-            <h3>Some already answered this questions :</h3>
-            <%                int i = 1;
-                for (Answers a : da.getAnswers(q.getQuestionId())) {
+
+            <h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>
+            <span class='input-group-btn'>
+                <a href="viewQuestion.jsp?question_id=<%=que_id%>&vote=up" style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
+                    <span class='glyphicon glyphicon-plus' aria-hidden='true'/>
+                </a>
+                <a href="viewQuestion.jsp?question_id=<%=que_id%>&vote=down" style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
+                    <span class='glyphicon glyphicon-minus' aria-hidden='true'/>
+                </a>
+            </span>
+
+            <%
+                out.println("<hr><h4>Asked by : " + q.getUsers().getName());
+
+                int i = 1;
+                ArrayList<Answers> answer = da.getAnswers(q.getQuestionId());
+                if (answer.size() > 0) {
+                    out.println("<hr><h3>Someone already answered this question:</h3>");
+                }
+                for (Answers a : answer) {
                     out.println("<div style='background-color:#f5f5f5'><hr>");
                     out.println("<h4 style='margin-left:2%;'>" + i + ". " + a.getContent() + "</h4>");
-                    out.println("<h4 style='margin-left:2%;'>Answered by : " + a.getUsers().getName() + "</h4>");
-                    out.println("<h4 style='margin-left:2%;'>Posted on : "+q.getTime()+"</h4>");
-
+                    out.println("<hr><h4>Answered by : " + a.getUsers().getName());
                     out.println("<hr></div>");
                     i++;
                 }
@@ -70,15 +82,11 @@
             <div style='margin-left: 10%;margin-top:2%'>
 
                 <form class="form-horizontal" action="InsertAnswers" method="POST">
-                    <%//                        Users user = new DataAkses().getUser(request.getParameter("email"));
-//                        out.println("<img src='" + user.getAvatar() + "' alt='profile_photo' class='courseIcon'>");
-//                        out.println("<h2>" + user.getName() + "</h2>");
-                        out.println("<img src='Icons/Courses/1068.png' alt='profile_photo' class='courseIcon'>");
-                        out.println("<h2>User Name</h2>");
+                    <%
+                        Users user = new DataAkses().getUser(userId);
+                        out.println("<img src='" + user.getAvatar() + "' alt='profile_photo' class='courseIcon'>");
+                        out.println("<h2>" + user.getName() + "</h2>");
                     %>
-
-
-                    <h3>Level : 1 - XP: 1000</h3>
 
                     <div class="form-group">
                         <label for="Title" style="margin-top:1%">Your Answer</label>
@@ -93,7 +101,7 @@
                             <button type="submit" class="btn btn-primary">Post Answer</button>
                         </div>
                     </div>
-                    <input type="hidden" name="email" value="<%=email%>" id="email"/>
+                    <input type="hidden" name="userId" value="<%=userId%>" id="email"/>
                     <input type="hidden" name="question" value="<%=que_id%>" id="email"/>
                 </form>
 

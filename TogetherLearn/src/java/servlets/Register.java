@@ -17,7 +17,7 @@ import util.DataAkses;
 @WebServlet(name = "Register", urlPatterns = {"/Register"})
 public class Register extends HttpServlet {
 
-    //private final static String DEST = System.getProperty("user.dir") + "/web/ava";
+    //private final static String DEST = System.getProperty("user.dir") + "\\web\\ava";
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, UnsupportedEncodingException {

@@ -17,7 +17,6 @@ public class VoteQuestion  implements java.io.Serializable {
     public VoteQuestion() {
     }
 
-	
     public VoteQuestion(VoteQuestionId id, Questions questions, Users users) {
         this.id = id;
         this.questions = questions;

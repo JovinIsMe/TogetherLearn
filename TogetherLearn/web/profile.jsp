@@ -11,12 +11,12 @@
     <body>
         <jsp:include page="header.jsp" flush="true"/>
         <%
-            if (session.getAttribute("email")==null || session.getAttribute("email").equals("")) {
+            if (session.getAttribute("userId")==null || session.getAttribute("userId").equals("")) {
                 RequestDispatcher rd = request.getRequestDispatcher("index.html");
                 rd.include(request, response);
-            } else {
-                Users user = new Users();
-                user = new DataAkses().getUser((String) session.getAttribute("email"));
+            }
+            Users user = new Users();
+            user = new DataAkses().getUser(Long.parseLong((String) session.getAttribute("userId")));
         %>
         <div class="block">
             <div class="userProfile  current">
@@ -58,9 +58,9 @@
                     </div>
                 </div>        
             </div>
+            </div>
         </div>
         <hr/>
-        <%}%>
         <jsp:include page="footer.jsp" flush="true"/>
     </body>
 </html>

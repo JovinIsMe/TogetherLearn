@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="model.Users"%>
 <%@page import="model.Answers"%>
 <%@page import="java.util.ArrayList"%>
@@ -11,7 +12,14 @@
             <jsp:param name="laman" value="Discuss"/>
         </jsp:include>
         <%
-            String email = request.getParameter("email");
+            String email = "";
+            Long userId = Long.MIN_VALUE;
+            boolean loggedin = false;
+            if (!(session.getAttribute("userId") == null || session.getAttribute("userId").equals(""))) {
+                loggedin = true;
+                email = (String) session.getAttribute("email");
+                userId = Long.parseLong(session.getAttribute("userId") + "");
+            }
         %>
         <style>
             .mainBody{
@@ -37,8 +45,8 @@
             <div class="row">
                 <div class="col-lg-2">
                     <div class="input-group">
-                        <a href="newQuestion.jsp?email=<%=email%>"
-                           <button type="submit" class="btn btn-info">NEW QUESTION</button>
+                        <a href="newQuestion.jsp?email=<%=email%>">
+                            <button type="submit" class="btn btn-info">NEW QUESTION</button>
                         </a>
                     </div>
                 </div>
@@ -58,12 +66,12 @@
 
 
             <ul class="nav nav-tabs">
-                <li role="presentation" ><a href="#">Most Recent</a></li>
-                <li role="presentation"><a href="#">Most Upvote</a></li>
-                <li role="presentation"><a href="#">Most Answered</a></li>
-                <li role="presentation"><a href="#">Unanswered</a></li>
-                <li role="presentation"><a href="#">My Questions</a></li>
-                <li role="presentation"><a href="#">My Answers</a></li>
+                <li role="presentation" ><a href="discuss.jsp?ordering=MostRecent">Most Recent</a></li>
+                <li role="presentation"><a href="discuss.jsp?ordering=MostUpvote">Most Upvote</a></li>
+                <li role="presentation"><a href="discuss.jsp?ordering=MostAnswered">Most Answered</a></li>
+                <li role="presentation"><a href="discuss.jsp?ordering=Unanswered">Unanswered</a></li>
+                <li role="presentation"><a href="discuss.jsp?ordering=MyQuestions">My Questions</a></li>
+                <li role="presentation"><a href="discuss.jsp?ordering=MyAnswers">My Answers</a></li>
             </ul>
             <%
                 DataAkses da = new DataAkses();
@@ -78,23 +86,18 @@
                         out.println("<div style='background-color:#f5f5f5'><hr>");
                         out.println("<h2><a href=\"viewQuestion.jsp?question_id=" + q.getQuestionId() + "\" style='margin-left:2%'>" + q.getTitle() + "</a></h2>");
                         out.println("<h4 style='margin-left:2%'>" + q.getMessage() + "</h5>");
-                        String tags[] = q.getTag().split(", ");
-
+                        String tags[] = q.getTag().split(",");
+                        for (int idx = 0; idx < tags.length; idx++) {
+                            out.println("<form action='#' method='post'><button type='submit' name='search' value='"+ tags[idx] +"' class='btn btn-info' style='margin-left:4%'>" + tags[idx] + "</button></form>");
+                        }
                         try {
                             Long uid = q.getUsers().getUserId();
                             Users user = da.getUser(uid);
                             System.out.println(user.getName());
                             out.println("<h4 style='margin-left:2%'>From : " + user.getName() + "</h5>");
-                        } catch (Exception ex) {
-                        }
-
-                        for (int idx = 0; idx < tags.length; idx++) {
-                            out.println("<button type='submit' class='btn btn-info' style='margin-left:4%'>" + tags[idx] + "</button>");
-
-                        }
-
+                        } catch (Exception ex) {}
                         out.println("<hr><h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>");
-                        out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+                        out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(q.getQuestionId()) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
                         out.println("<hr></div>");
                     }
                     out.println("<hr>");
@@ -103,62 +106,46 @@
             %>
             <h3>Trending Posts</h3>
 
-            <%  for (Questions q : da.getAllQuestions()) {
+            <%                
+                List<Questions> questions;
+                String param = request.getParameter("ordering") + "";
+                if (param.equals("MostUpvote")) {
+                    questions = da.getAllQuestions();
+                } else if (param.equals("MostAnswered")) {
+                    questions = da.getAllQuestions();
+                } else if (param.equals("Unanswered")) {
+                    questions = da.getUnanswered();
+                } else if (param.equals("MyQuestions") && loggedin) {
+                    questions = da.getMyQuestions(userId);
+                } else if (param.equals("MyAnswers") && loggedin) {
+                    questions = da.getMyAnswers(userId);
+                } else {
+                    questions = da.getAllQuestions();
+                }
+
+                for (Questions q : questions) {
                     out.println("<div style='background-color:#f5f5f5'><hr>");
                     out.println("<h2><a href=\"viewQuestion.jsp?question_id=" + q.getQuestionId() + "\" style='margin-left:2%'>" + q.getTitle() + "</a></h2>");
-                    out.println("<h4 style='margin-left:2%'>" + q.getMessage() + "</h5>");
+                    String tags[] = q.getTag().split(",");
+                    for (int idx = 0; idx < tags.length; idx++) {
+                        out.println("<form action='#' method='post'><button type='submit' name='search' value='"+ tags[idx] +"' class='btn btn-info' style='margin-left:4%'>" + tags[idx] + "</button></form>");
+                    }
                     try {
                         Long uid = q.getUsers().getUserId();
                         Users user = da.getUser(uid);
                         System.out.println(user.getName());
                         out.println("<h4 style='margin-left:2%'>From : " + user.getName() + "</h5>");
-                        out.println("<h4 style='margin-left:2%'>Posted on : "+q.getTime()+"</h5>");
-                        
-                        //out.println("<img src='"+user.getAvatar()+"' class='courseIcon'>");
-                        
-                        
-                    } catch (Exception ex) {
-                    }
-                    String tags[] = q.getTag().split(", ");
-                    for (int idx = 0; idx < tags.length; idx++) {
-                        out.println("<button type='submit' class='btn btn-info' style='margin-left:4%'>" + tags[idx] + "</button>");
+                        out.println("<h4 style='margin-left:2%'>Posted on : " + q.getTime() + "</h5>");
 
+                        //out.println("<img src='"+user.getAvatar()+"' class='courseIcon'>");
+                    } catch (Exception ex) {
                     }
 
                     out.println("<hr><h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>");
-                    out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
-            %>
-            <span class='input-group-btn'>
-                <button type='submit' style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
-                    <span class='glyphicon glyphicon-plus' aria-hidden='true'>
-                    </span>
-                </button>
-                <button type='submit' style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
-                    <span class='glyphicon glyphicon-minus' aria-hidden='true'>
-                    </span>
-                </button>
-            </span>
-            <br>
-            <%
-                    //out.println("<img style='margin-left:8%;margin-top:1%;'src='Icons/Courses/1068.png' alt='profile_photo' class='courseIcon'>");
-                    out.println("<hr></div>");
+                    out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(q.getQuestionId()) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+                    out.println("<br><hr></div>");
                 }
-
-
             %>
-            <ul>
-                <li><a href="#">Python 3.7 Released</a></li>
-                <li><a href="#">Utilizing Arrow Keys in C++</a></li>
-                <li><a href="#">How to convert .java into .apk?</a></li>
-                <li><a href="#">How do you make a programming language?</a></li>
-                <li><a href="#">Is it still relevant to put <!DOCTYPE html> at the beginning</a></li>
-                <li><a href="#">Different between Python 2 and Python 3?</a></li>
-                <li><a href="#">How to make header files</a></li>
-                <li><a href="#">What do you know now that you wish you knew when you started</a></li>
-                <li><a href="#">In Java when is it appropriate to use Array, ArrayList, and</a></li>
-                <li><a href="#">Why do books and people normally use 'i' for 'for statement'</a></li>
-            </ul>
-
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="disabled">

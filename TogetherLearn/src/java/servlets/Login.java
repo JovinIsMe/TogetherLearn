@@ -45,9 +45,7 @@ public class Login extends HttpServlet {
             String userId = u.getUserId()+"";
             session.setAttribute("userId", userId);
             session.setAttribute("email", email);
-            RequestDispatcher rd = request.getRequestDispatcher("discuss.jsp");
-            rd.include(request, response);
-            System.out.println("You are registered!");
+            response.sendRedirect("discuss.jsp");
         }
     }
 }

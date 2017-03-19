@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import model.Answers;
 import model.Questions;
 import model.Users;
+import model.VoteAnswer;
+import model.VoteQuestion;
+import model.VoteQuestionId;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -66,6 +69,52 @@ public class DataAkses {
         return hasil;
     }
 
+    public ArrayList<Questions> getMyQuestions(Long uid){
+        Session session = factory.openSession();
+        ArrayList<Questions> hasil = null;
+        Query q = session.createQuery("from Questions where user_id = :userId");
+        q.setParameter("userId", uid);
+        hasil = (ArrayList<Questions>) q.list();
+        session.close();
+        return hasil;
+    }
+    
+    public ArrayList<Questions> getUnanswered(){
+        Session session = factory.openSession();
+        ArrayList<Answers> temp = null;
+        Query q = session.createQuery("from Answers where count(*) = 0 group by question_id");
+        temp = (ArrayList<Answers>) q.list();
+        
+        ArrayList<Questions> hasil = null;
+        for (Answers answer : temp) {
+            Query b = session.createQuery("from Questions where questionId = :q_id");
+            b.setParameter("q_id", answer.getQuestions().getQuestionId());
+            hasil = (ArrayList<Questions>) b.list();
+            hasil.addAll(hasil);
+        }
+        
+        session.close();
+        return hasil;
+    }
+    
+    public ArrayList<Questions> getMyAnswers(Long uid){
+        Session session = factory.openSession();
+        ArrayList<Answers> temp = null;
+        Query a = session.createQuery("from Answers where user_id = :userId");
+        a.setParameter("userId", uid);
+        temp = (ArrayList<Answers>) a.list();
+        
+        ArrayList<Questions> hasil = null;
+        for (Answers answer : temp) {
+            Query b = session.createQuery("from Questions where questionId = :q_id");
+            b.setParameter("q_id", answer.getQuestions().getQuestionId());
+            hasil = (ArrayList<Questions>) b.list();
+            hasil.addAll(hasil);
+        }
+        session.close();
+        return hasil;
+    }
+    
     public ArrayList<Questions> getAllQuestions() {
         Session session = factory.openSession();
         ArrayList<Questions> hasil = null;
@@ -77,17 +126,15 @@ public class DataAkses {
         return hasil;
     }
     
-    public Questions getQuestions(long questionId){
+    public Questions getQuestion(long questionId){
         Session session = factory.openSession();
         Questions t = null;
         Transaction tx = session.beginTransaction();
 
-        System.out.println("QUESTION ID : "+questionId);
         Query q = session.createQuery("from Questions where question_id = :em");
         q.setParameter("em",questionId);
         t = (Questions) q.uniqueResult();
         tx.commit();
-        System.out.println("QUESTION ID : "+questionId);
         session.close();
         return t;
     }
@@ -176,7 +223,6 @@ public class DataAkses {
         Session session = factory.openSession();
         Transaction tx = session.beginTransaction();
         Users user = (Users) session.get(Users.class, u.getUserId());
-        System.out.println("UPDATE = "+user);
         user.setName(u.getName());
         user.setEmail(u.getEmail());
         user.setPassword(u.getPassword());
@@ -184,5 +230,88 @@ public class DataAkses {
         tx.commit();
         session.close();
         return true;
+    }
+    
+    public boolean cekQuestionVote(Long qid, Long uid){
+        boolean h = true;
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        VoteQuestion vq2 = null;
+        vq2 = (VoteQuestion) session.get(VoteQuestion.class, new VoteQuestionId(uid, qid));
+        
+        tx.commit();
+        session.close();
+        
+        if (vq2==null) {
+            h=false;
+        }
+        return h;
+    }
+    
+    public long getSumQuestionVote(Long qid){
+        Long l = Long.parseLong("0");
+        ArrayList<VoteQuestion> vq = null;
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from VoteQuestion where question_Id = :qid");
+        q.setParameter("qid", qid);
+        
+        vq = (ArrayList<VoteQuestion>) q.list();
+        
+        for (VoteQuestion a : vq) {
+            l+=a.getVote();
+        }
+        
+        tx.commit();
+        session.close();
+        return l;
+    }
+    
+    public void voteQuestion(Long qid, Long uid, String vote) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        
+        VoteQuestion vq2 = (VoteQuestion) session.get(VoteQuestion.class, new VoteQuestionId(uid,qid));
+        Long v = vq2.getVote();
+        if (vote.equals("up") && v < 1){
+            v++;
+            vq2.setVote(v);
+        } else if (vote.equals("down") && v > -1){
+            v--;
+            vq2.setVote(v);
+        }
+        tx.commit();
+        session.close();
+    }
+    
+    public void NewvoteQuestion(Long qid, Long uid, String vote) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Questions q = getQuestion(qid);
+        Users u = getUser(uid);
+        System.out.println(u);
+//        session.saveOrUpdate(q);
+//        session.saveOrUpdate(u);
+        VoteQuestion vq = new VoteQuestion();
+        vq.setId(new VoteQuestionId(u.getUserId(), q.getQuestionId()));
+        vq.setQuestions(q);
+        vq.setUsers(u);
+        if (vote.equals("up")){
+            vq.setVote(Long.parseLong("+1"));
+        } else if (vote.equals("down")){
+            vq.setVote(Long.parseLong("-1"));
+        }
+//        VoteQuestion vq2 = (VoteQuestion) session.get(VoteQuestion.class, new VoteQuestionId(q.getQuestionId(), u.getUserId()));
+//        Long v = vq2.getVote();
+//        if (vote.equals("up") && v < 1){
+//            v++;
+//            vq.setVote(v);
+//        } else if (vote.equals("down") && v > -1){
+//            v--;
+//            vq.setVote(v);
+//        }
+        session.save(vq);
+        tx.commit();
+        session.close();
     }
 }
