@@ -36,17 +36,15 @@ public class EditProfile extends HttpServlet {
             Logger.getLogger(EditProfile.class.getName()).log(Level.SEVERE, null, ex);
         }
         String avatar = request.getParameter("avatar");
-        PrintWriter out = response.getWriter();
         if(!(password.equals("") || retypePassword.equals("")) && password.equals(retypePassword)){
             Users u = new Users(name, email, password, avatar);
             u.setUserId(new DataAkses().getUser(oriEmail).getUserId());
             new DataAkses().updateProfile(u);
-                out.println("<html>Saved</html>");
-                RequestDispatcher rd = request.getRequestDispatcher("profile.jsp");
-                rd.include(request, response);
-            
+            RequestDispatcher rd = request.getRequestDispatcher("profile.jsp");
+            request.setAttribute("email", u.getEmail());
+            request.setAttribute("success", "Saved!");
+            rd.forward(request, response);
         } else {
-            out.println("Failed");
             RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
             rd.include(request, response);
         }

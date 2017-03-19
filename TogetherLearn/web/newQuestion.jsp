@@ -7,11 +7,18 @@
         </jsp:include>
         <%
             String email = request.getParameter("email");
+            
         %>
     </head>
     <body>
         <jsp:include page="header.jsp" flush="true"/>
-
+        <%
+            if(session.getAttribute("userId")== null || session.getAttribute("userId").equals("")){
+                //RequestDispatcher rd = request.getRequestDispatcher("discuss.jsp");
+                //rd.forward(request, response);
+                response.sendRedirect("discuss.jsp");
+            }
+        %>
         <div style='margin-left: 10%;margin-top:2%'>
         <form class="form-horizontal" action="InsertQuestions" method="POST">
             
@@ -35,6 +42,7 @@
                     </div>
                 </div>
                 <input type="hidden" name="email" value="<%=email%>" id="email"/>
+
         </form>
             
         </div>
