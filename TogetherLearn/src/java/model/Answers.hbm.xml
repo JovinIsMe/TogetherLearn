@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 16, 2017 4:30:44 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="model.Answers" table="answers" catalog="forum" optimistic-lock="version">
+        <id name="answerId" type="long">
+            <column name="answer_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="questions" class="model.Questions" lazy="false" fetch="select">
+            <column name="question_id" />
+        </many-to-one>
+        <many-to-one name="users" class="model.Users" lazy="false" fetch="select">
+            <column name="user_id" />
+        </many-to-one>
+        <property name="content" type="string">
+            <column name="content" length="200" />
+        </property>
+        <property name="time" type="timestamp">
+            <column name="_time" length="19" not-null="true" />
+        </property>
+        <set name="voteAnswers" table="vote_answer" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="answer_id" not-null="true" />
+            </key>
+            <one-to-many class="model.VoteAnswer" />
+        </set>
+    </class>
+</hibernate-mapping>
