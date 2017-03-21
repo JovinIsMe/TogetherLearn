@@ -5,6 +5,7 @@ import model.Answers;
 import model.Questions;
 import model.Users;
 import model.VoteAnswer;
+import model.VoteAnswerId;
 import model.VoteQuestion;
 import model.VoteQuestionId;
 import org.hibernate.Query;
@@ -134,6 +135,18 @@ public class DataAkses {
         Query q = session.createQuery("from Questions where question_id = :em");
         q.setParameter("em",questionId);
         t = (Questions) q.uniqueResult();
+        tx.commit();
+        session.close();
+        return t;
+    }
+    public Answers getAnswer(long questionId){
+        Session session = factory.openSession();
+        Answers t = null;
+        Transaction tx = session.beginTransaction();
+
+        Query q = session.createQuery("from Answers where answer_id = :em");
+        q.setParameter("em",questionId);
+        t = (Answers) q.uniqueResult();
         tx.commit();
         session.close();
         return t;
@@ -295,6 +308,89 @@ public class DataAkses {
         VoteQuestion vq = new VoteQuestion();
         vq.setId(new VoteQuestionId(u.getUserId(), q.getQuestionId()));
         vq.setQuestions(q);
+        vq.setUsers(u);
+        if (vote.equals("up")){
+            vq.setVote(Long.parseLong("+1"));
+        } else if (vote.equals("down")){
+            vq.setVote(Long.parseLong("-1"));
+        }
+//        VoteQuestion vq2 = (VoteQuestion) session.get(VoteQuestion.class, new VoteQuestionId(q.getQuestionId(), u.getUserId()));
+//        Long v = vq2.getVote();
+//        if (vote.equals("up") && v < 1){
+//            v++;
+//            vq.setVote(v);
+//        } else if (vote.equals("down") && v > -1){
+//            v--;
+//            vq.setVote(v);
+//        }
+        session.save(vq);
+        tx.commit();
+        session.close();
+    }
+    
+    public boolean cekAnswerVote(Long aid, Long uid){
+        boolean h = true;
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        VoteAnswer vq2 = null;
+        vq2 = (VoteAnswer) session.get(VoteAnswer.class, new VoteAnswerId(uid, aid));
+        
+        tx.commit();
+        session.close();
+        
+        if (vq2==null) {
+            h=false;
+        }
+        return h;
+    }
+    
+    public long getSumAnswerVote(Long aid){
+        Long l = Long.parseLong("0");
+        ArrayList<VoteAnswer> vq = null;
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("from VoteAnswer where answer_Id = :qid");
+        q.setParameter("qid", aid);
+        
+        vq = (ArrayList<VoteAnswer>) q.list();
+        
+        for (VoteAnswer a : vq) {
+            l+=a.getVote();
+        }
+        
+        tx.commit();
+        session.close();
+        return l;
+    }
+    
+    public void voteAnswer(Long aid, Long uid, String vote) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        
+        VoteAnswer vq2 = (VoteAnswer) session.get(VoteAnswer.class, new VoteAnswerId(uid,aid));
+        Long v = vq2.getVote();
+        if (vote.equals("up") && v < 1){
+            v++;
+            vq2.setVote(v);
+        } else if (vote.equals("down") && v > -1){
+            v--;
+            vq2.setVote(v);
+        }
+        tx.commit();
+        session.close();
+    }
+    
+    public void NewvoteAnswer(Long aid, Long uid, String vote) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Answers q = getAnswer(aid);
+        Users u = getUser(uid);
+        System.out.println(u);
+//        session.saveOrUpdate(q);
+//        session.saveOrUpdate(u);
+        VoteAnswer vq = new VoteAnswer();
+        vq.setId(new VoteAnswerId(u.getUserId(), q.getAnswerId()));
+        vq.setAnswers(q);
         vq.setUsers(u);
         if (vote.equals("up")){
             vq.setVote(Long.parseLong("+1"));
