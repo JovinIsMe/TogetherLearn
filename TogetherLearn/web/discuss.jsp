@@ -97,7 +97,11 @@
                             out.println("<h4 style='margin-left:2%'>From : " + user.getName() + "</h5>");
                         } catch (Exception ex) {}
                         out.println("<hr><h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>");
+
                         out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(q.getQuestionId()) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
+                        out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
                         out.println("<hr></div>");
                     }
                     out.println("<hr>");
@@ -142,7 +146,11 @@
                     }
 
                     out.println("<hr><h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>");
+
                     out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(q.getQuestionId()) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
+                    out.println("<h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
                     out.println("<br><hr></div>");
                 }
             %>

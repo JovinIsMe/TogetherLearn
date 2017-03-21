@@ -6,6 +6,7 @@ import model.Questions;
 import model.Users;
 import model.VoteAnswer;
 import model.VoteAnswerId;
+
 import model.VoteQuestion;
 import model.VoteQuestionId;
 import org.hibernate.Query;
@@ -245,6 +246,7 @@ public class DataAkses {
         return true;
     }
     
+
     public boolean cekQuestionVote(Long qid, Long uid){
         boolean h = true;
         Session session = factory.openSession();
@@ -406,6 +408,29 @@ public class DataAkses {
 //            v--;
 //            vq.setVote(v);
 //        }
+
+    public void voteQuestion(Long qid, Long uid, String vote) {
+        Session session = factory.openSession();
+        Transaction tx = session.beginTransaction();
+        Questions q = getQuestion(qid);
+        Users u = getUser(uid);
+        System.out.println(u);
+        session.saveOrUpdate(q);
+        session.saveOrUpdate(u);
+        VoteQuestion vq = new VoteQuestion();
+        vq.setId(new VoteQuestionId(q.getQuestionId(), u.getUserId()));
+        vq.setQuestions(q);
+        vq.setUsers(u);
+        VoteQuestion vq2 = (VoteQuestion) session.get(VoteQuestion.class, new VoteQuestionId(q.getQuestionId(), u.getUserId()));
+        Long v = vq2.getVote();
+        if (vote.equals("up") && v < 1){
+            v++;
+            vq.setVote(v);
+        } else if (vote.equals("down") && v > -1){
+            v--;
+            vq.setVote(v);
+        }
+
         session.save(vq);
         tx.commit();
         session.close();
