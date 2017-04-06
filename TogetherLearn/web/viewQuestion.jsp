@@ -42,9 +42,19 @@
                     String vote = request.getParameter("vote") + "";
                     System.out.println("VOTE " + vote);
                     if (vote.equals("up") || vote.equals("down")) {
+
+                        if (da.cekQuestionVote(que_id, userId)) {
+                                da.voteQuestion(que_id, userId, vote);
+                            }else{
+                                da.NewvoteQuestion(que_id, userId, vote);
+                        }
+                    }
+                    out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(que_id) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
                         da.voteQuestion(que_id, userId, vote);
                     }
                     out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
+
             %>
 
             <h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>
@@ -71,8 +81,32 @@
                     out.println("<hr><h4>Answered by : " + a.getUsers().getName());
                     out.println("<hr></div>");
                     i++;
+
+
+                    String voteAnswer = request.getParameter("voteAnswer") + "";
+                    System.out.println("VOTE " + voteAnswer);
+                    if (voteAnswer.equals("up") || voteAnswer.equals("down")) {
+                        if (da.cekAnswerVote(a.getAnswerId(), userId)) {
+                                da.voteAnswer(a.getAnswerId(), userId, voteAnswer);
+                            }else{
+                                da.NewvoteAnswer(a.getAnswerId(), userId, vote);
+                        }
+                    }
+                    out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ "Votes : " + da.getSumAnswerVote(a.getAnswerId()) +"</h4>");
                 }
             %>
+            <span class='input-group-btn'>
+                <a href="viewQuestion.jsp?question_id=<%=que_id%>&vote=up&voteAnswer=up" style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
+                    <span class='glyphicon glyphicon-plus' aria-hidden='true'/>
+                </a>
+                <a href="viewQuestion.jsp?question_id=<%=que_id%>&vote=down&voteAnswer=down" style='margin-top:2%;margin-left:5%;' class='btn btn-info' aria-label='Left Align' >
+                    <span class='glyphicon glyphicon-minus' aria-hidden='true'/>
+                </a>
+            </span>
+
+                }
+            %>
+
             <hr>
             <h2>New Answer</h2>
             <div style='margin-left: 10%;margin-top:2%'>
