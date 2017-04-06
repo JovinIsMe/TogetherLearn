@@ -42,7 +42,6 @@
                     String vote = request.getParameter("vote") + "";
                     System.out.println("VOTE " + vote);
                     if (vote.equals("up") || vote.equals("down")) {
-
                         if (da.cekQuestionVote(que_id, userId)) {
                                 da.voteQuestion(que_id, userId, vote);
                             }else{
@@ -50,11 +49,6 @@
                         }
                     }
                     out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getSumQuestionVote(que_id) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
-
-                        da.voteQuestion(que_id, userId, vote);
-                    }
-                    out.println("<hr><h4 style='margin-left:5%'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + 0 + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + da.getAnswers(q.getQuestionId()).size() + "</h4>");
-
             %>
 
             <h4 style='margin-left:5%'>Votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Answer</h4>
@@ -82,7 +76,6 @@
                     out.println("<hr></div>");
                     i++;
 
-
                     String voteAnswer = request.getParameter("voteAnswer") + "";
                     System.out.println("VOTE " + voteAnswer);
                     if (voteAnswer.equals("up") || voteAnswer.equals("down")) {
@@ -103,10 +96,6 @@
                     <span class='glyphicon glyphicon-minus' aria-hidden='true'/>
                 </a>
             </span>
-
-                }
-            %>
-
             <hr>
             <h2>New Answer</h2>
             <div style='margin-left: 10%;margin-top:2%'>
